@@ -11,7 +11,7 @@ def clear():
         os.system('clear')
 
 
-def help():
+def show_help():
     clear()
     print("What should we pick up at the store? ")
     print("""
