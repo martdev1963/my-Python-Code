@@ -1,101 +1,97 @@
-from tkinter import *
-#import tkinter as tk
+from flask import Flask, render_template
 
-#window = tk.Tk() # this works
+app=Flask(__name__)
 
-# main window...All code goes in between these lines...window = Tk()  and window.mainloop()
-window = Tk() # this works too.
-
-# function that converts km to mi...
-#def km_to_miles():
-    #print(e1_value.get()) # the get() method of the StringVar object...
-#    miles=float(e1_value.get())*1.6
-#    t1.insert(END,miles) # place this value after the last entry...
-
-# FUNCTION DEFINITION...
-# function that converts from metric to SAE standard...
-def kilogram_to_grams_pounds_ounces():
-    # conversion formulae...
-    grams=float(kilogram_entry_value.get())*1000
-    pounds=float(kilogram_entry_value.get())*2.20462
-    ounces=float(kilogram_entry_value.get())*35.274
-
-    grams_display.delete("1.0", END)
-    grams_display.insert(END,grams)
-    pounds_display.delete("1.0", END)
-    pounds_display.insert(END,pounds)
-    ounces_display.delete("1.0", END)
-    ounces_display.insert(END,ounces)
-
-# widgets (widgets go within the main window)
-#b1=Button(window,text="Execute",command=km_to_miles) # parameters, separated by commas...You just pass the function name without the function()
-
-# BUTTON WIDGET... clicking the button will invoke function callback...
-b1=Button(window,text="Execute",command=kilogram_to_grams_pounds_ounces) # parameters, separated by commas...You just pass the function name without the function()
-#b1.pack()
-# alternative way for .pack()
-
-# button coordinate location on window object...
-b1.grid(row=1,column=0)
+@app.route('/plot/')
+def plot():
+    from pandas_datareader import data
+    import datetime
+    # you can use Shift-J/K to select multiple cells and Shift-M will merge all the selected cells.
+    from bokeh.plotting import figure, show, output_file
+    from bokeh.embed import components
+    from bokeh.resources import CDN # content delivery network...
 
 
-# instantiate StringVar object for user entry...
-kilogram_entry_value=StringVar()
+    start=datetime.datetime(2015,11,1)
+    end=datetime.datetime(2016,3,10)
+    # name parameter is for the company's ticker... like AAPL for Apple Inc...
+    # data used to build candlestick chart: High, Low, Open Close Date...
+    df=data.DataReader(name="GOOG",data_source="yahoo",start=start,end=end)
+    df
+
+    date_increase=df.index[df.Close > df.Open]
+    date_decrease=df.index[df.Close < df.Open]
+
+    df.Open
+
+    # function definition...the return values of this function are used to set the coordinates for the rectangle glyphs...
+    def inc_dec(c, o):
+        if c > o:
+            value="Increase"
+        elif c < o:
+            value="Decrease"
+        else:
+            value="Equal"
+        return value
+
+    # creates new status column with list of data returned by function inc_dec(c,o)...
+    df["Status"]=[inc_dec(c,o) for c, o in zip(df.Close,df.Open)]
+    # creates respective columns in the dataFrame table as well...
+    df["Middle"]=(df.Open+df.Close)/2  # y coordinate of rectangle...center point...
+    df["Height"]=abs(df.Close-df.Open) # bottom and top of rectangle...
 
 
-# ENTRY WIDGET...
+    p=figure(x_axis_type='datetime', width=1000, height=300, sizing_mode="scale_width")
+    p.title.text="Candlestick Chart"
+    #-------------------------------------------------------------------------------------------------------------------
+    #                                      // NEW CODE//
+    # Candlestick segments
+    # Section 20 Lecture 216    TIME: 1:36 / 5:02
+    # alpha factor for plot/figure object (p=figure)...how transparent you want the grid lines to appear...
+    # a value of zero gives you 100% transparency on the grid... (the range is between 0-1...floating point values)
+    #-------------------------------------------------------------------------------------------------------------------
+    p.grid.grid_line_alpha=0.3
+    #p.grid.grid_line_alpha=1
+    p.grid.grid_line_alpha=0
+    #p.grid.grid_line_alpha=1
 
-# label for entry user input widget...though its a separate widget for the label alone.
-e_label=Label(window,text="Kg")
-e_label.grid(row=0,column=0)
+    hours_12=12*60*60*1000 # width of rectangle glyphs expressed in milliseconds along the x axis...
 
-entry_kilogram=Entry(window,textvariable=kilogram_entry_value) # passing StringVar object so it can be displayed as user input...
-entry_kilogram.grid(row=0,column=1) # entry widget coordinate....
+    #-------------------------------------------------------------------------------------------------------------------
+    # rect() takes 4 mandatory parameters...
+    # x coordinate, y coordinate, 12 hour width, height
+    # Displaying the data using the Rectangle glyphs...
+    #-------------------------------------------------------------------------------------------------------------------
 
-#e1_value=StringVar() # instantiate a StringVar object...
-#e1=Entry(window,textvariable=e1_value) # e1_value for the user input...
-#e1.grid(row=0,column=1)
+    # segment() takes 4 mandatory parameters...
+    p.segment(df.index, df.High, df.index, df.Low, color="Black") # (df.index, df.High) x, y coords...
+    # df.index is the date column...
+    p.rect(df.index[df.Status=="Increase"],df.Middle[df.Status=="Increase"], hours_12,
+           df.Height[df.Status=="Increase"], fill_color="#CCFFFF", line_color="black")
 
-# OUTPUT WIDGETS...and their coordinates on the window object...
-# this displays the output result in the text field widget t1
-#t1=Text(window,height=1,width=20)
-#t1.grid(row=0,column=2)
+    p.rect(df.index[df.Status=="Decrease"],df.Middle[df.Status=="Decrease"], hours_12,
+           df.Height[df.Status=="Decrease"], fill_color="#FF3333", line_color="black")
 
-grams_display=Text(window,height=1,width=20)
-grams_display.grid(row=0,column=2)
+    #--------------------------------------------------------------------------------------------------------------------
+    # from bokeh.embed import components
+    #from bokeh.resources import CDN # content delivery network...
+    #--------------------------------------------------------------------------------------------------------------------
+    script1, div1 = components(p)
+    cdn_js=CDN.js_files[0]
+    cdn_css=CDN.css_files[0]
+    return render_template("plot.html",
+    script1=script1,
+    div1=div1,
+    cdn_css=cdn_css,
+    cdn_js=cdn_js)
 
-pounds_display=Text(window,height=1,width=20)
-pounds_display.grid(row=0,column=3)
+@app.route('/')
+def home():
+    return render_template("home.html")
 
-ounces_display=Text(window,height=1,width=20)
-ounces_display.grid(row=0,column=4)
+@app.route('/about/')
+def about():
+    return render_template("about.html")
 
-
-
-window.mainloop() # all code goes before this line...
-
-
-
-
-"""
-OUTPUT:
-miles=e1_value.get()*1.6
-TypeError: can't multiply sequence by non-int of type 'float'...solution: miles=float(e1_value.get())*1.6...convert user input string to float...
-"""
-
-
-"""
-Traceback (most recent call last):
-  File "script1.py", line 2, in <module>
-    import Tkinter as tk
-ModuleNotFoundError: No module named 'Tkinter'
-
-for code interspection, do this:
-
-invoke the python interactive shell...
-    ipython
-
-from tkinter import *
-
-Button?
-"""
+if __name__=="__main__":
+    app.run(debug=True)
