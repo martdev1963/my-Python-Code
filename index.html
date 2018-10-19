@@ -1,23 +1,21 @@
 <!DOCTYPE html>
-<!-- Martin Batista - Python Developer -->
 <html lang="en">
-  <title>Data Collector App</title>
-  <head>
-    <link href="../static/main.css" rel="stylesheet">
-  </head>
-    <body>
-
-      <div class="container">
-        <h1>Collecting Height</h1>
-        <h3>Please fill the entrees to get population statistics on Height</h3>
-          <div class="message">
-            {{text | safe}}
-          </div>
-        <form action="{{url_for('success')}}" method="POST">
-          <input title="Your email will be safe with us" placeholder="Enter your email address" type="email" name="email_name" required><br>
-          <input title="Your data will be safe with us" placeholder="Enter your height in cm" type="number" min="50", max="300" step="0.1" name="height_name" required><br>
-          <button type-"submit"> Submit </button>
-        </form>
-      </div>
-    </body>
+<title> Super Geocoder </title>
+<head>
+  <link href="../static/main.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1>Super Geocoder</h1>
+    <h3>Please upload your csv file. the values containing addressess should be in a column named <em>addresses</em> or <em>address</em></h3>
+    <form action="{{url_for('success_table')}}" method="POST" enctype="multipart/form-data">
+        <input type="file" accept=".csv" name="file" />
+        <button type="submit"> Submit </button>
+    </form>
+    <div class="output">
+      {{text|safe}}
+      {% include btn ignore missing %}
+    </div>
+  <div>
+</body>
 </html>
