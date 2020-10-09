@@ -23,9 +23,9 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: # if user clicks on red button
             run = False               # then run == False  
-
-    keys = pygame.key.get_pressed()
-
+    # keys that are held down...
+    keys = pygame.key.get_pressed() # this checks for keys that are continually held down after the initial pressing of them.
+    # checks for which key is being held down...
     if keys[pygame.K_LEFT]:
         x -= velocity  # to move left you subtract from the x coordinate
     if keys[pygame.K_RIGHT]:  
