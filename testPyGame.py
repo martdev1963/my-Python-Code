@@ -20,7 +20,8 @@ run = True
 while run:
     pygame.time.delay(100)
 
-    for event in pygame.event.get():
+   for event in pygame.event.get(): # this event object can be used to detect keys clicked on too but pygame.key.get_pressed() is better
+        # suited for this particular functionality...of detecting the continual holding of a key for making the rectangle move. 
         if event.type == pygame.QUIT: # if user clicks on red button
             run = False               # then run == False  
     # keys that are held down...
