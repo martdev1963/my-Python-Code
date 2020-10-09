@@ -40,7 +40,7 @@ while run:
     win.fill((0,0,0)) # this makes the program fill the screen black thus erasing the previously drawn red rectangles giving 
     # the appearance of the red rectangle moving and not leaving traces as it did previously without this line of code...
                       # window, rgb color for the shape, dimensions of the shape        
-    pygame.draw.rect(win, (255, 0, 0), (x, y, width, height)) # parameters...Everythong in pygame is a surface
+    pygame.draw.rect(win, (255, 0, 0), (x, y, width, height)) # parameters...Everything in pygame is a surface
     pygame.display.update() # this refreshes the display thus showing the current code's result which is making a rectangular figure
 
 
