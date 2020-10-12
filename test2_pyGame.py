@@ -45,14 +45,15 @@ while run:
         if keys[pygame.K_SPACE]:
             isJump = True
     else:
-        if jumpCount >= -10:
-            neg = 1   # for moving down on the y axis  (pos numbers are low). Multiplying by the neg variable brings the charagcter back down.
+         if jumpCount >= -10:
+            neg = 1   # when rec character is going up neg variable == positive 1 thus multiplying by 1, nothing occurs... 
             if jumpCount < 0:
-                neg = -1  # for moving up on the y axis (neg numbers are high)
+                neg = -1  # eventually jumpCount will be less than 1  ie; a negative number so neg will == negative 1 effecting the calculation 
+            # and making the character come back down.     
             y -= (jumpCount ** 2) / 2 * neg # squared by 2 so this will cause the character to move 100 pixels upward and downward on the y axis.
             # y -= (jumpCount ** 2) * 0.5 * neg  this calculation also works exactly the same as the above one...
-            jumpCount -= 1    # this will cause the character to slow down on the jump by 90 pixels and so on...plus if you leave it out 
-            # it won't come back down...It makes it come back down, slowly and smoothly.
+            jumpCount -= 1    # this will cause the character to speed up on the jump by 90 pixels, then 80 and 70 and so on...
+            #plus if you leave it out  it won't come back down...It makes it come back down, slowly and smoothly.
         else:
             isJump = False
             jumpCount = 10
