@@ -71,8 +71,8 @@ class player(object): # class attributes
             #win.blit(char, (self.x,self.y)) # this plays the animation of the character standing and facing the screen.     
 
     def hit(self):
-        self.isJump = False
-        self.jumpCount = 10
+        self.isJump = False  # this fixes the bug: The man sinking down on the y after collision with Orc
+        self.jumpCount = 10  # this fixes the bug: The man sinking down on the y after collision with Orc
         self.x = 60
         self.y = 400
         self.walkCount = 0
