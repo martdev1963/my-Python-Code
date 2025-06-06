@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css?family=Emilys+Candy|Patua+One&display=swap');
+
+body {
+  background-image: url('black.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+}
+
+h1 {
+  font-family: 'Emilys Candy', cursive;
+  font-weight: normal;
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+h3 {
+  margin-top: 4px;
+  font-size:32px;
+  font-family: 'Patua One', cursive;
+  font-weight: normal;
+  color: #ffeaa7;
+  text-shadow: 3px 3px black;
+}
+
+a {
+  background-color: white;
+  color: black;
+  padding: 20px;
+  border-radius: 20px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: 'Patua One', cursive;
+  font-size: 18px;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+img {
+  display: block;
+  margin: auto;
+  margin-bottom: 30px;
+}
