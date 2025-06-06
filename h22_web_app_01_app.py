@@ -7,7 +7,7 @@ import random
 colors = ["Red", "Blue", "Green", "Pink", "Salmon", "Brown"]
 weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 months = ["January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "November", "December"]
-cars = ["A Pinto", "A Yugo", "A Bug", "A Lambo", "A Ferrari"]
+cars = ["Pinto", "Yugo", "Bug", "Lambo", "Ferrari"]
 
 @app.route("/")
 def home():
