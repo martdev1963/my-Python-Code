@@ -7,11 +7,17 @@
         <div class="container">
         <img width="60px" src="{{url_for('static', filename=icon)}}">
         <a href="{{url_for('color_page')}}">Color</a>
+          
         <a href="{{url_for('number_page')}}">Number</a>
         <a href="{{url_for('week_page')}}">Weekday</a>
         <a href="{{url_for('month_page')}}">Month</a>
         <a href="{{url_for('cheap_cars')}}">Cars</a>
-        <h1>Your lucky {{category}} is</h1>
+          {% if category == 'car' %}
+              <h1>Your lucky {{category}} is a</h1>
+          {% else %}
+              <h1>Your lucky {{category}} is</h1>
+          {% endif %}
+          
         <h3 style="color: {{lucky_item}}">{{lucky_item}}</h3>
         </div>
     </body>
